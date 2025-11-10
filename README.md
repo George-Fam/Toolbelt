@@ -39,3 +39,20 @@ Show backlog visualizer for TV libraries via Plex API.
 ```
 
 Optional flags for host/port/token if not local.
+
+## rmForced.ps1
+
+Force-remove paths that Windows refuses to delete.
+
+**Purpose**: Take ownership, strip permissions, and delete anyway.
+
+**Usage**
+
+```powershell
+./rmForced.ps1 "C:\Program Files\SomeLockedFolder"
+./rmForced.ps1 "C:\Program Files\WindowsApps\*EA" "D:\Temp\Stuck"
+```
+
+**Notes**
+
+Must be run elevated (Administrator). 
