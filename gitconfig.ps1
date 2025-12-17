@@ -42,80 +42,9 @@ $erroractionpreference = "stop"
 # ----------------------------------- paths -----------------------------------
 $CONFIG_DIR = $env:USERPROFILE
 
-# --------------------------------- settings ----------------------------------
-$globalsettings = @{
-    "init.defaultBranch"   = "main"
-    "column.ui"            = "auto"
-    "branch.sort"          = "-committerdate"
-    "tag.sort"             = "version:refname"
-    "diff.algorithm"       = "histogram"
-    "diff.colorMoved"      = "plain"
-    "diff.mnemonicPrefix"  = "true"
-    "diff.renames"         = "true"
-    "push.autoSetupRemote" = "true"
-    "push.followTags"      = "true"
-    "fetch.prune"          = "true"
-    "fetch.pruneTags"      = "true"
-    "fetch.all"            = "true"
-    "help.autocorrect"     = "prompt"
-    "merge.conflictstyle"  = "zdiff3"
-}
+$SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
+$CONFIG     = Get-Content (Join-Path $SCRIPT_DIR "gitconfig.json") -Raw | ConvertFrom-Json
 
-# ---------------------------------- aliases ----------------------------------
-$aliases = @{
-    ac       = "commit -am"
-    br       = "branch"
-    ci       = "commit"
-    co       = "checkout"
-    st       = "status"
-    stashall = "stash push --include-untracked"
-
-    adog     = "log --all --decorate --oneline --graph"
-    adogt    = "log --all --decorate --oneline --graph " + 
-    "--date=format:'%Y-%m-%d %H:%M:%S' " + 
-    "--pretty=format:" +
-    "'%C(auto)%h %C(bold blue)%ad%Creset %C(auto)%d %C(reset)%s'"
-    adogr    = "log --all --decorate --oneline --graph " + 
-    "--date=relative " + 
-    "--pretty=format:" +
-    "'%C(auto)%h %C(green)(%cr)%Creset %C(auto)%d %C(reset)%s'"
-    adoga    = "log --all --decorate --oneline --graph " + 
-    "--date=relative " + 
-    "--pretty=format:" +
-    "'%C(auto)%h %C(green)(%cr)%Creset %C(auto)%d %C(reset)%s " + 
-    "%C(dim white)- %an%Creset'"
-}
-
-# -------------------------------- identities ---------------------------------
-$identities = @(
-    @{
-        name     = "George Fam"; 
-        file     = ".gitconfig_github_pro"; 
-        emails   = @("george.fam@famcode.net"); 
-        patterns = @(
-            "git@githubPro:*"
-            "git@github.com:George-Fam*"
-        )
-    },
-    @{
-        name     = "joblu";
-        file     = ".gitconfig_github_personal";
-        emails   = @("georgeramzy13@live.ca");
-        patterns = @(
-            "git@github:*"
-            "git@github.com:joblu*"    
-        )
-    },
-    @{
-        name     = "George Fam";
-        file     = ".gitconfig_gitlab_school";
-        emails   = @("fam.george@courrier.uqam.ca");
-        patterns = @(
-            "git@gitlabSchool:*"
-            "git@gitlab.info.uqam.ca:fam.george*"
-        )
-    }
-)
 # =============================================================================
 
 # ================================= Functions =================================
@@ -152,43 +81,44 @@ function add-includeif {
 }
 
 function apply-defaultidentity {
+    $id = $CONFIG.defaultIdentity
     Write-Host "Applying default identity..." -ForegroundColor cyan
-    git config --global user.name       "joblu"
-    git config --global user.email      "georgeramzy13@live.ca"
-    git config --global author.name     "joblu"
-    git config --global author.email    "georgeramzy13@live.ca"
-    git config --global committer.name  "joblu"
-    git config --global committer.email "georgeramzy13@live.ca"
+    git config --global user.name       $id.name
+    git config --global user.email      $id.email
+    git config --global author.name     $id.name
+    git config --global author.email    $id.email
+    git config --global committer.name  $id.name
+    git config --global committer.email $id.email
     Write-Host "Default identity applied successfully." -ForegroundColor green
 }
 
 function apply-globalsettings {
     Write-Host "Configuring global git settings..." -ForegroundColor cyan
-    foreach ($kv in $globalsettings.getenumerator()) {
-        git config --global $kv.key "$($kv.value)"
+    foreach ($kv in $CONFIG.globalSettings.psobject.Properties) {
+        git config --global $kv.Name "$($kv.Value)"
     }
     Write-Host "Global settings applied successfully." -ForegroundColor green
 }
 
 function apply-aliases {
     Write-Host "Configuring git aliases..." -ForegroundColor cyan
-    foreach ($kv in $aliases.getenumerator()) {
-        git config --global "alias.$($kv.key)" "$($kv.value)"
+    foreach ($kv in $CONFIG.aliases.psobject.Properties) {
+        git config --global "alias.$($kv.Name)" "$($kv.Value)"
     }
     Write-Host "Aliases applied successfully." -ForegroundColor green
 }
 function apply-identities {
     Write-Host "Applying conditional identities" -ForegroundColor cyan
-    foreach ($id in $identities) {
+    foreach ($id in $CONFIG.identities) {
         $path = Join-Path $CONFIG_DIR $id.file
-        write-identityfile -path $path -name $id.name -email $id.emails[0]
+        write-identityfile -path $path -name $id.name -email $id.email
 
         foreach ($p in $id.patterns) {
             add-includeif -pattern "hasconfig:remote.*.url:$p/**" `
                 -includefile $path
         }
     }
-    Write-Host "`All conditional identities configured successfully." `
+    Write-Host "All conditional identities configured successfully." `
         -ForegroundColor green
 }
 
@@ -201,8 +131,9 @@ function apply-largerepolocal {
     Write-Host "Applying large repo optimizations to: $abs" `
         -ForegroundColor Cyan
 
-    git -C $abs config core.fsmonitor true
-    git -C $abs config core.untrackedCache true
+    foreach ($kv in $CONFIG.largeRepoSettings.psobject.Properties) {
+        git -C $abs config $kv.Name $kv.Value
+    }
 
     Write-Host "Large repo optimizations applied locally." `
         -ForegroundColor Green
@@ -210,7 +141,7 @@ function apply-largerepolocal {
 # =============================================================================
 
 if ($RepoPath) {
-    Apply-LargeRepoLocal $RepoPath
+    apply-largerepolocal $RepoPath
     exit
 }
 

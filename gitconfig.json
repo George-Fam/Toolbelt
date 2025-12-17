@@ -1,0 +1,76 @@
+{
+  "globalSettings": {
+    "init.defaultBranch": "main",
+    "column.ui": "auto",
+    "branch.sort": "-committerdate",
+    "tag.sort": "version:refname",
+    "diff.algorithm": "histogram",
+    "diff.colorMoved": "plain",
+    "diff.mnemonicPrefix": "true",
+    "diff.renames": "true",
+    "push.autoSetupRemote": "true",
+    "push.followTags": "true",
+    "fetch.prune": "true",
+    "fetch.pruneTags": "true",
+    "fetch.all": "true",
+    "help.autocorrect": "prompt",
+    "merge.conflictstyle": "zdiff3"
+  },
+
+  "aliases": {
+    "ac": "commit -am",
+    "br": "branch",
+    "ci": "commit",
+    "co": "checkout",
+    "st": "status",
+    "stashall": "stash push --include-untracked",
+
+    "adog": "log --all --decorate --oneline --graph",
+    "adogt": "log --all --decorate --oneline --graph --date=format:'%Y-%m-%d %H:%M:%S' --pretty=format:'%C(auto)%h %C(bold blue)%ad%Creset %C(auto)%d %C(reset)%s'",
+    "adogr": "log --all --decorate --oneline --graph --date=relative --pretty=format:'%C(auto)%h %C(green)(%cr)%Creset %C(auto)%d %C(reset)%s'",
+    "adoga": "log --all --decorate --oneline --graph --date=relative --pretty=format:'%C(auto)%h %C(green)(%cr)%Creset %C(auto)%d %C(reset)%s %C(dim white)- %an%Creset'"
+  },
+
+  "defaultIdentity": {
+    "name": "joblu",
+    "email": "georgeramzy13@live.ca"
+  },
+
+  "_comment": "To disable conditional identities, set identities to an empty array: []",
+  
+  "identities": [
+    {
+      "name": "George Fam",
+      "file": ".gitconfig_github_pro",
+      "email": "george.fam@famcode.net",
+      "patterns": [
+        "git@githubPro:*",
+        "git@github.com:George-Fam*"
+      ]
+    },
+    {
+      "name": "joblu",
+      "file": ".gitconfig_github_personal",
+      "email": "georgeramzy13@live.ca",
+      "patterns": [
+        "git@github:*",
+        "git@github.com:joblu*"
+      ]
+    },
+    {
+      "name": "George Fam",
+      "file": ".gitconfig_gitlab_school",
+      "email": "fam.george@courrier.uqam.ca",
+      "patterns": [
+        "git@gitlabSchool:*",
+        "git@gitlab.info.uqam.ca:fam.george*"
+      ]
+    }
+  ],
+
+  "largeRepoSettings": {
+    "core.fsmonitor": true,
+    "core.untrackedCache": true
+  }
+}
+
