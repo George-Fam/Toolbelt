@@ -43,7 +43,13 @@ $erroractionpreference = "stop"
 $CONFIG_DIR = $env:USERPROFILE
 
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
-$CONFIG     = Get-Content (Join-Path $SCRIPT_DIR "gitconfig.json") -Raw | ConvertFrom-Json
+$JsonPath = Join-Path $SCRIPT_DIR "gitconfig.json"
+
+if (-not (Test-Path $JsonPath)) {
+    throw "Configuration file 'gitconfig.json' not found at $JsonPath"
+}
+
+$CONFIG = Get-Content $JsonPath -Raw | ConvertFrom-Json
 
 # =============================================================================
 
