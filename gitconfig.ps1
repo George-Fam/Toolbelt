@@ -40,7 +40,7 @@ $erroractionpreference = "stop"
 # ================================= constants =================================
 
 # ----------------------------------- paths -----------------------------------
-$CONFIG_DIR = $env:USERPROFILE
+$CONFIG_DIR = $HOME
 
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $JsonPath = Join-Path $SCRIPT_DIR "gitconfig.json"
@@ -71,7 +71,7 @@ function write-identityfile {
 [committer]
     name = $name
     email = $email
-"@ | Out-File -FilePath $path -Encoding utf8 -Force
+"@ | Out-File -FilePath $path -Encoding utf8NoBOM -Force
 
     Write-Host "Created identity file: $path"
 }
