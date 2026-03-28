@@ -1,18 +1,24 @@
 {
+  "_comment": "Example configuration for Toolbelt's git config generator. Copy this file, then replace values to match your own preferences. This repo intentionally ships an example (not my personal config).",
+
   "globalSettings": {
     "init.defaultBranch": "main",
     "column.ui": "auto",
     "branch.sort": "-committerdate",
     "tag.sort": "version:refname",
+
     "diff.algorithm": "histogram",
     "diff.colorMoved": "plain",
     "diff.mnemonicPrefix": "true",
     "diff.renames": "true",
+
     "push.autoSetupRemote": "true",
     "push.followTags": "true",
+
     "fetch.prune": "true",
     "fetch.pruneTags": "true",
     "fetch.all": "true",
+
     "help.autocorrect": "prompt",
     "merge.conflictstyle": "zdiff3"
   },
@@ -32,38 +38,29 @@
   },
 
   "defaultIdentity": {
-    "name": "joblu",
-    "email": "georgeramzy13@live.ca"
+    "name": "Your Name",
+    "email": "you@example.com"
   },
 
-  "_comment": "To disable conditional identities, set identities to an empty array: []",
-  
   "identities": [
     {
-      "name": "George Fam",
-      "file": ".gitconfig_github_pro",
-      "email": "george.fam@famcode.net",
+      "name": "Work Identity (Name)",
+      "file": ".gitconfig_work",
+      "email": "you@company.net",
       "patterns": [
-        "git@githubPro:*",
-        "git@github.com:George-Fam*"
+        "git@githubWorkAlias:*",
+        "git@github.com:your-org*",
+        "https://github.com/your-org/*"
       ]
     },
     {
-      "name": "joblu",
-      "file": ".gitconfig_github_personal",
-      "email": "georgeramzy13@live.ca",
+      "name": "Personal Identity",
+      "file": ".gitconfig_personal",
+      "email": "you@personal-email.com",
       "patterns": [
-        "git@github:*",
-        "git@github.com:joblu*"
-      ]
-    },
-    {
-      "name": "George Fam",
-      "file": ".gitconfig_gitlab_school",
-      "email": "fam.george@courrier.uqam.ca",
-      "patterns": [
-        "git@gitlabSchool:*",
-        "git@gitlab.info.uqam.ca:fam.george*"
+        "git@githubPersonalAlias:*",
+        "git@github.com:your-user*",
+        "https://github.com/your-user/*"
       ]
     }
   ],
@@ -71,6 +68,26 @@
   "largeRepoSettings": {
     "core.fsmonitor": true,
     "core.untrackedCache": true
+  },
+
+  "tips": {
+    "patterns": [
+      "Patterns are matched against configured Git remote URLs (the script uses remote.*.url, so it can match any remote name, not just 'origin').",
+      "Use the same format you see in: git remote get-url origin (SSH, SSH Host Alias or HTTPS are fine).",
+      "To disable conditional identities entirely, set 'identities' to an empty array: []"
+    ],
+    "usage": [
+      "This repo ships an example gitconfig.json. Copy it and customize it for your own environment.",
+      "After editing this file, re-run the script to (re)generate the identity files (e.g., ~/.gitconfig_work) and update your global git config (~/.gitconfig).",
+      "If you use multiple remotes (origin/upstream/fork), remember the tool can match any of them (remote.*.url). If a repo has both a work and personal remote configured, multiple identities may match."
+    ],
+    "largeRepos": [
+      "If you run the script with -RepoPath, it ONLY applies largeRepoSettings to that repo and skips global settings/aliases/identities.",
+      "largeRepoSettings are optional. Some settings (like core.fsmonitor) may require additional setup depending on OS/Git version."
+    ],
+    "security": [
+      "Don't commit private tokens/credentials in this file, especially if it's in a public repo.",
+      "Emails/names are usually fine to commit if you intend them to be public."
+    ]
   }
 }
-
