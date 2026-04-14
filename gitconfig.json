@@ -49,8 +49,8 @@
       "email": "you@company.net",
       "patterns": [
         "git@githubWorkAlias:*",
-        "git@github.com:your-org*",
-        "https://github.com/your-org/*"
+        "git@github.com:your-org",
+        "https://github.com/your-org"
       ]
     },
     {
@@ -59,8 +59,8 @@
       "email": "you@personal-email.com",
       "patterns": [
         "git@githubPersonalAlias:*",
-        "git@github.com:your-user*",
-        "https://github.com/your-user/*"
+        "git@github.com:your-user",
+        "https://github.com/your-user"
       ]
     }
   ],
@@ -73,7 +73,9 @@
   "tips": {
     "patterns": [
       "Patterns are matched against configured Git remote URLs (the script uses remote.*.url, so it can match any remote name, not just 'origin').",
-      "Use the same format you see in: git remote get-url origin (SSH, SSH Host Alias or HTTPS are fine).",
+      "Use the same format you see in: git remote get-url origin (SSH, SSH Host Alias or HTTPS).",
+      "Each pattern is the base URL up to (and including) the user/org. The script appends /** automatically for repos.",
+      "The user/org segment can be a specific name (e.g. 'your-user') to match only that account, or * to match any user/org on that host or SSH alias.",
       "To disable conditional identities entirely, set 'identities' to an empty array: []"
     ],
     "usage": [
