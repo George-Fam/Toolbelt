@@ -20,7 +20,11 @@
     "fetch.all": "true",
 
     "help.autocorrect": "prompt",
-    "merge.conflictstyle": "zdiff3"
+    "merge.conflictstyle": "zdiff3",
+
+    "core.autocrlf": "input",
+    "core.excludesFile": "~/.gitignore",
+    "core.quotePath": "false"
   },
 
   "aliases": {
